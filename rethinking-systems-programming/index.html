@@ -1,0 +1,1478 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Rust - Rethinking Systems Programming</title>
+
+    <meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+    <meta name="author" content="Hakim El Hattab">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/thoughtram.css" id="theme">
+    <link rel="stylesheet" href="css/theme/custom.css" id="custom">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <a style="font-family: Open Sans; text-decoration: none; font-size: 1.5em;position: absolute; top: 1em; left: 1em; z-index: 2;" href="http://ngeurope.org">
+      <!-- <img style="opacity: 0.5;"height="50" src="img/ng-nl-logo.png"> -->
+      <span style="color: #888; text-shadow: none; vertical-align: 90%; font-size: 0.8em; display: inline-block; margin-left: 0.3em;">#CodeTalks2015</span>
+    </a>
+
+    <a style="font-family: Open Sans; text-decoration: none; font-size: 1.5em;position: absolute; bottom: 1em; left: 1em; z-index: 2;" href="http://twitter.com/cburgdorf">
+      <span style="color: #888; text-shadow: none; vertical-align: 80%; font-size: 0.8em; display: inline-block; margin-left: 0.3em;">@cburgdorf</span>
+    </a>
+
+    <div class="reveal">
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+        <!-- <section class="thoughtram-slide" data-background="#f0f0f0"> -->
+        <!--   <img alt="thoughtram brain" src="img/thoughtram-brain-black.png"> -->
+        <!--   <img alt="Extend your memory." src="img/thoughtram-logo-line-with-tag-line.png"> -->
+        <!-- </section> -->
+        <section class="deck-slide">
+          <img style="text-align: center; display: block; margin: 0 auto; width: 320px;" src="img/rust-logo-blk.svg">
+          <h1 style="text-align: center; font-size: 1.6em; margin-top: 0.1em;">Rethinking Systems Programming</h1>
+          <p style="text-align: center; font-size: 0.8em;">By <a href="http://twitter.com/cburgdorf">Christoph Burgdorf</a></p>
+          <div style="text-align: center;">
+            <img style="margin: 0; margin-right: 0.6em; border-radius: 50%; width: 100px;" src="img/christoph.png">
+          </div>
+        </section>
+
+        <!-- <section class="about-slide">
+          <div style="margin-top: 3em;">
+          <div class="about">
+            <img width="250" height="250" alt="Christoph" src="img/christoph.png">
+            <h3>Christoph Burgdorf</h3>
+            <h3 style="margin-top: -0.5em;"><a href="http://twitter.com/cburgdorf">@cburgdorf</a></h3>
+          </div>
+        </div>
+        </section> -->
+
+        <section data-background="img/lahja_and_me.jpg">
+          <p class="fragment" style="color: #fff; font-weight: bold; font-size: 2em; margin-top: 7em;">That's before I discovered Rust</p>
+          <p class="fragment" style="position: absolute; top: 100px; left: 800px; color: #fff; font-weight: bold; font-size: 3em; transform: rotateZ(20deg); text-shadow: 5px 1px 8px #000;">grey</p>
+          <p class="fragment" style="position: absolute; top: 200px; left: -100px; color: #fff; font-weight: bold; font-size: 2em;">no beard &rarr;</p>
+        </section>
+
+        <section data-background="img/lahja_and_me_rust.jpeg">
+          <p class="fragment" style="color: #fff; font-weight: bold; font-size: 2em; margin-top: 7em;">But then I got into Rust...</p>
+          <p class="fragment" style="position: absolute; top: 50px; left: 590px; color: #fff; font-weight: bold; font-size: 1.4em; width: 600px; transform: rotateZ(20deg)">colors everywhere!</p>
+          <p class="fragment" style="position: absolute; top: 300px; left: -100px; color: #fff; font-weight: bold; font-size: 2em;">beard! &rarr;</p>
+        </section>
+
+        <section>
+          <h2>Let's talk about Rust</h2>
+        </section>
+<!--
+        <section class="about-thoughtram-slide">
+          <img class="pulse" alt="thoughtram brain pulse" src="img/thoughtram-brain-big.png">
+        </section> -->
+
+        <section>
+          <h2 style="color:red">DANGER ZONE</h2>
+          <p class="fragment">You're gonna learn from a Rust noob</p>
+        </section>
+
+        <section>
+          <h2>3 Topics to talk about</h2>
+          <ul>
+            <li class="fragment">Why Rust</li>
+            <li class="fragment">Rust Features</li>
+            <li class="fragment">Nickel.rs</li>
+          </ul>
+        </section>
+
+        <section class="sub-section-slide" data-background-transition="zoom" data-background="#80B4C4">
+          <h2>Why Rust?</h2>
+        </section>
+
+        <section>
+            <h2>Certain areas need C/C++</h2>
+                <img class="fragment" data-fragment-index="0" src="img/linux.jpeg" style="width: 150px; position: absolute; bottom: 0px; left: 0px;" />
+                <img class="fragment" data-fragment-index="0" src="img/windows_logo.png" style="width: 100px; position: absolute; bottom: 80px; left: 200px;" />
+                <img class="fragment" data-fragment-index="1" src="img/Firefox-logo.svg.png" style="width: 100px; position: absolute; bottom: 100px; left: 700px;" />
+                <img class="fragment" data-fragment-index="1" src="img/chrome_logo.png" style="width: 130px; margin-left: 300px" />
+                <img class="fragment" data-fragment-index="2" src="img/gaming.jpg" style="width: 450px; position: absolute; bottom: -300px; left: 200px;" />
+            </ul>
+        </section>
+
+        <section>
+            <h2>C/C++'s Offer</h2>
+            <ul>
+              <li class="fragment">Direct Memory Access</li>
+              <li class="fragment">Zero Cost Abstractions</li>
+              <li class="fragment">No Garbage Collection</li>
+              <li class="fragment">Compiled</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>What's wrong with C/C++</h2>
+            <ul>
+              <li class="fragment">Manual memory management</li>
+              <li class="fragment">Segfaults</li>
+              <li class="fragment">Language Flaws</li>
+              <li class="fragment">Data Races</li>
+            </ul>
+        </section>
+
+        <section style="display: block;">
+            <div class="performance-chart visible" data-fragment-index="0">
+            <span class="performance-chart__axe-title fragment" style="position: absolute;top: 221px;left: -212px;transform: rotate(-90deg);" data-fragment-index="0">Control / Performance</span>
+            <span class="performance-chart__axe-title fragment" style="position: absolute;bottom: -50px;right: 360px;" data-fragment-index="0">Safety</span>
+
+            <span class="performance-chart__lang fragment" data-fragment-index="1" style="
+                position: absolute;
+                left: 20px;
+                top: 10px;
+            ">C</span>
+
+            <span class="performance-chart__lang fragment" data-fragment-index="1" style="
+                position: absolute;
+                left: 71px;
+                top: 90px;">C++</span>
+
+            <span class="performance-chart__lang fragment" data-fragment-index="3" style="
+                position: absolute;
+                left: 250px;
+                top: 190px;">Go</span>
+
+
+            <span class="performance-chart__lang fragment" data-fragment-index="3" style="
+                position: absolute;
+                left: 350px;
+                top: 230px;">Java</span>
+
+            <span class="performance-chart__lang fragment" data-fragment-index="3" style="
+                position: absolute;
+                left: 300px;
+                top: 310px;">ML</span>
+
+            <span class="performance-chart__lang fragment" data-fragment-index="2" style="
+                position: absolute;
+                right: 20px;
+                bottom: 20px
+            ">Haskell</span>
+
+            </div>
+        </section>
+
+        <section>
+          <p style="font-style:italic">"Rust is a systems programming language that runs blazingly fast, prevents almost all crashes*, and eliminates data races."</p>
+          <p style="font-size: 0.5em; margin-top: 100px; text-align: right; font-style: italic;">* In theory. Rust is a work-in-progress and may do anything it likes up to and including eating your laundry.</p>
+        </section>
+
+
+        <section style="display: block;">
+            <div class="performance-chart visible">
+            <span class="performance-chart__axe-title" style="position: absolute;top: 221px;left: -212px;transform: rotate(-90deg);">Control / Performance</span>
+            <span class="performance-chart__axe-title" style="position: absolute;bottom: -50px;right: 360px;">Safety</span>
+
+            <span class="performance-chart__lang" data-fragment-index="1" style="
+                position: absolute;
+                left: 20px;
+                top: 10px;
+            ">C</span>
+
+            <span class="performance-chart__lang" style="
+                position: absolute;
+                left: 71px;
+                top: 90px;">C++</span>
+
+
+            <span class="performance-chart__lang fragment" style="
+                position: absolute;
+                right: 20px;
+                top: 10px;">Rust</span>
+
+            <span class="performance-chart__lang" style="
+                position: absolute;
+                left: 250px;
+                top: 190px;">Go</span>
+
+
+            <span class="performance-chart__lang" style="
+                position: absolute;
+                left: 350px;
+                top: 230px;">Java</span>
+
+            <span class="performance-chart__lang" style="
+                position: absolute;
+                left: 300px;
+                top: 310px;">ML</span>
+
+            <span class="performance-chart__lang" style="
+                position: absolute;
+                right: 20px;
+                bottom: 20px
+            ">Haskell</span>
+
+            </div>
+        </section>
+
+
+        <section data-background="img/hooray.gif">
+          <p style="color: #fff; font-weight: bold; font-size: 2em; margin-top: 6em;">Tell me more!</p>
+        </section>
+
+
+        <section>
+            <h2>Rust governance</h2>
+            <ul>
+              <li class="fragment">Created by Mozilla</li>
+              <li class="fragment">Open Source posterchild</li>
+              <li class="fragment">Lots of external contributors</li>
+              <li class="fragment">RFC Process</li>
+            </ul>
+        </section>
+
+
+        <section>
+            <h2>The Zen of Rust</h2>
+            <ul>
+              <li>Modern C/C++ replacement</li>
+              <li>Memory Safety without Garbage Collection</li>
+              <li>No runtime needed</li>
+              <li>Rich Typesystem</li>
+              <li>Strong Functional Programming influence</li>
+              <li>Great package manager (cargo)</li>
+            </ul>
+        </section>
+
+
+        <section class="sub-section-slide" data-background-transition="zoom" data-background="#80B4C4">
+          <h2>Rust features</h2>
+        </section>
+
+
+        <section>
+            <h2>Ownership</h2>
+        </section>
+
+
+        <section>
+            <h2>Garbage Collection</h2>
+            <pre ng-non-bindable><code class="javascript">class Circle {
+  constructor(radius) {
+    this.radius = radius;
+  }
+
+  calcArea () {
+    return Math.PI * this.radius * this.radius;
+  }
+}
+</code></pre>
+        </section>
+
+        <section>
+            <h2>Garbage Collection</h2>
+            <pre id="gc-code" ng-non-bindable><code class="javascript">function calcCircles(numberOfCircles, radius) {
+  var area = 0;
+  for (var i = 0; i < numberOfCircles; i++) {
+    let circle = new Circle(radius);
+    area += circle.calcArea();
+  }
+  return area;
+}
+
+calcCircles(3, 5);</code></pre>
+
+</code></pre>
+
+<pre id="heap-layout" ng-non-bindable><code class="javascript">
+            Heap Memory
+┌─────────────────────────────────┐
+│                                 │
+├─────────────────────────────────┤
+│                                 │
+├─────────────────────────────────┤
+│                                 │
+├─────────────────────────────────┤
+│                                 │
+└─────────────────────────────────┘</code></pre>
+
+        </section>
+
+        <section>
+            <h2>Garbage Collection</h2>
+<pre id="gc-code"><static-code class="javascript hljs opaque"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">calcCircles</span><span class="hljs-params">(numberOfCircles, radius)</span> </span>{
+  <span class="hljs-keyword">var</span> area = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; numberOfCircles; i++) {
+    <span class="hljs-keyword">let</span> circle = <span class="hljs-keyword non-opaque">new</span> <span class="non-opaque">Circle(radius)</span>;
+    area += circle.calcArea();
+  }
+  <span class="hljs-keyword">return</span> area;
+}
+
+calcCircles(<span class="hljs-number">3</span>, <span class="hljs-number">5</span>);</static-code>
+    </pre>
+
+<pre id="heap-layout" ng-non-bindable><code class="javascript">
+            Heap Memory
+┌─────────────────────────────────┐
+│      new Circle (radius)        │
+├─────────────────────────────────┤
+│                                 │
+├─────────────────────────────────┤
+│                                 │
+├─────────────────────────────────┤
+│                                 │
+└─────────────────────────────────┘</code></pre></section>
+
+        <section>
+            <h2>Garbage Collection</h2>
+<pre id="gc-code"><static-code class="javascript hljs opaque"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">calcCircles</span><span class="hljs-params">(numberOfCircles, radius)</span> </span>{
+  <span class="hljs-keyword">var</span> area = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; numberOfCircles; i++) {
+    <span class="hljs-keyword">let</span> circle = <span class="hljs-keyword non-opaque">new</span> <span class="non-opaque">Circle(radius)</span>;
+    area += circle.calcArea();
+  }
+  <span class="hljs-keyword">return</span> area;
+}
+
+calcCircles(<span class="hljs-number">3</span>, <span class="hljs-number">5</span>);</static-code>
+    </pre>
+
+<pre id="heap-layout" ng-non-bindable><code class="javascript">
+            Heap Memory
+┌─────────────────────────────────┐
+│      new Circle (radius)        │
+├─────────────────────────────────┤
+│      new Circle (radius)        │
+├─────────────────────────────────┤
+│                                 │
+├─────────────────────────────────┤
+│                                 │
+└─────────────────────────────────┘</code></pre>
+
+        </section>
+
+
+        <section>
+            <h2>Garbage Collection</h2>
+<pre id="gc-code"><static-code class="javascript hljs opaque"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">calcCircles</span><span class="hljs-params">(numberOfCircles, radius)</span> </span>{
+  <span class="hljs-keyword">var</span> area = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; numberOfCircles; i++) {
+    <span class="hljs-keyword">let</span> circle = <span class="hljs-keyword non-opaque">new</span> <span class="non-opaque">Circle(radius)</span>;
+    area += circle.calcArea();
+  }
+  <span class="hljs-keyword">return</span> area;
+}
+
+calcCircles(<span class="hljs-number">3</span>, <span class="hljs-number">5</span>);</static-code>
+    </pre>
+<pre id="heap-layout" ng-non-bindable><code class="javascript">
+            Heap Memory
+┌─────────────────────────────────┐
+│      new Circle (radius)        │
+├─────────────────────────────────┤
+│      new Circle (radius)        │
+├─────────────────────────────────┤
+│      new Circle (radius)        │
+├─────────────────────────────────┤
+│                                 │
+└─────────────────────────────────┘</code></pre>
+
+        </section>
+
+        <section>
+            <h2>Garbage Collection</h2>
+<pre id="gc-code"><static-code class="javascript hljs opaque"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">calcCircles</span><span class="hljs-params">(numberOfCircles, radius)</span> </span>{
+  <span class="hljs-keyword">var</span> area = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; numberOfCircles; i++) {
+    <span class="hljs-keyword">let</span> circle = <span class="hljs-keyword">new</span> <span>Circle(radius)</span>;
+    area += circle.calcArea();
+  }
+  <span class="hljs-keyword">return</span> area;
+}
+
+calcCircles(<span class="hljs-number">3</span>, <span class="hljs-number">5</span>);
+<span class="hljs-comment non-opaque">//some time later</span>
+</static-code>
+    </pre>
+<pre id="heap-layout" ng-non-bindable><code class="javascript">
+            Heap Memory
+┌─────────────────────────────────┐
+│                                 │
+├─────────────────────────────────┤
+│                                 │
+├─────────────────────────────────┤
+│                                 │
+├─────────────────────────────────┤
+│                                 │
+└─────────────────────────────────┘</code></pre>
+
+<p>
+  Eventually GC cleans it up
+</p>
+        </section>
+
+        <section>
+            <h2>Consider this JS Code</h2>
+            <pre ng-non-bindable><code class="javascript">/*
+var vehicle = {
+  name: 'Schoolbus',
+  passenger: []
+};*/
+var vehicle = getVehicle();
+var bookingService = new BookingService(vehicle);
+var repairService = new RepairService(vehicle);
+</code></pre>
+<p class="fragment">Now both <code class="rust">bookingService</code> and <code class="rust">repairService</code> hold a reference to <code class="rust">vehicle</code></p>
+        </section>
+
+
+        <section>
+            <h2>Same thing in Rust</h2>
+            <pre ng-non-bindable><code class="rust">let vehicle = get_vehicle();
+let booking_service = BookingService::new(vehicle);
+let repair_service = RepairService::new(vehicle);</code></pre>
+<p class="fragment">Doesn't compile!</p>
+<pre class="fragment" ng-non-bindable><code class="shell compile-error">error: use of moved value: `vehicle`
+RepairService::new(vehicle);
+                   ^~~~~~~
+note: `vehicle` moved here because it has type `Vehicle`,
+which is non-copyable BookingService::new(vehicle);</code></pre>
+        </section>
+
+
+        <section data-background="img/shocked.gif">
+          <p style="color:white; margin-top:600px; font-size:2em; font-weight: bold;">But why???</p>
+        </section>
+
+        <section>
+            <h2>Ownership</h2>
+            <ul>
+              <li>Rust moves ownership by default</li>
+              <li>The owner has the right to destroy the thing it owns</li>
+              <li>The memory is freed as soon as the owned variable goes out of it's scope</li>
+              <li>Hence <code>vehicle</code> may already be destroyed at the point when it's passed to <code>repair_service</code></li>
+              <li>Rust catches these errors at <b>compile time</b></li>
+            </ul>
+        </section>
+
+        <section data-background="img/shocked2.gif">
+          <p style="color: #fff; font-weight: bold; font-size: 2em; margin-top: 6em;">How am I supposed to write any code?!</p>
+        </section>
+
+        <section>
+            <h2>You can lend things out</h2>
+            <pre ng-non-bindable><code class="rust">let vehicle = get_vehicle();
+let booking_service = BookingService::new(&vehicle);
+let third_service = ThirdService::new(&vehicle);</code></pre>
+        </section>
+
+        <section>
+            <h2>Borrowing</h2>
+            <ul>
+              <li class="fragment">A reference is passed without transfering ownership</li>
+              <li class="fragment">One can borrow immutable (<code>&</code>) or mutable (<code>&mut</code>) but not both at the same time</li>
+              <li class="fragment">Borrowing is more polite than taking ownership</li>
+              <li class="fragment">Shared ownership can be achieved through special pointers with runtime checks</li>
+            </ul>
+        </section>
+
+        <section data-background="img/Anchorman.gif">
+          <p style="color: #fff; font-weight: bold; font-size: 2em; margin-top: 6em;">Safe memory management without GC</p>
+        </section>
+
+        <section>
+            <h2>Structs</h2>
+        </section>
+
+        <section>
+            <pre ng-non-bindable><code class="rust">struct Dog;</code></pre>
+<p>Structs are like lightweight classes</p>
+        </section>
+
+
+        <section>
+            <pre ng-non-bindable><code class="rust">struct Dog {
+    name: String,
+    age: i32
+}</code></pre>
+<p>They may have fields</p>
+        </section>
+
+
+        <section>
+            <pre ng-non-bindable><code class="rust">let yeti = Dog {
+    name: "Yeti".to_owned(),
+    age: 15
+}</code></pre>
+<p>They can be instantiated</p>
+        </section>
+
+
+        <section>
+            <pre ng-non-bindable><code class="rust">let yeti = Dog {
+    name: "Yeti".to_owned()
+}</code></pre>
+<div class="fragment">
+<pre ng-non-bindable><code class="shell compile-error">error: missing field: `age` [E0063]
+let yeti = Dog {
+    name: "Yeti".to_owned()
+};</code></pre>
+<p>But not partially </p>
+</div>
+        </section>
+
+        <section>
+            <pre ng-non-bindable><code class="rust">struct Dog {
+    name: String,
+    age: Option&lt;i32&gt;
+}</code></pre>
+<p>Rust has the <code>Option</code> enum for that</p>
+        </section>
+
+        <section>
+            <pre ng-non-bindable><code class="rust">let yeti = Dog {
+    name: "Yeti".to_owned(),
+    age: None
+};</code></pre>
+<p>Which makes it explicit (No <code>NullPointerExceptions</code>!)</p>
+        </section>
+
+
+        <section>
+            <pre ng-non-bindable><code class="rust">struct Dog {
+    name: String
+}
+
+impl Dog {
+  fn greet (&self) {
+    println!("My name is {}", self.name);
+  }
+}
+
+let banjo = Dog { name: "Banjo".to_owned() };
+banjo.greet();
+</code></pre>
+<p>They can have methods</p>
+        </section>
+
+        <section>
+            <h2>Traits</h2>
+        </section>
+
+
+        <section>
+            <pre ng-non-bindable><code class="rust">trait Talk {
+    fn talk (&self);
+}</code></pre>
+<p>Traits are like interfaces. They define a contract.</p>
+        </section>
+
+
+        <section>
+            <pre ng-non-bindable><code class="rust">struct Human;
+struct Dog;
+struct Tree;
+
+impl Talk for Human {
+    fn talk (&self) { println!("blabla"); }
+}
+
+impl Talk for Dog {
+    fn talk (&self)  { println!("bark bark"); }
+}</code></pre>
+        </section>
+
+
+        <section>
+            <pre ng-non-bindable><code class="rust">fn talk(talkable: &Talk) {
+    talkable.talk();
+}
+fn main() {
+    let person = Human;
+    let dog = Dog;
+    let tree = Tree;
+    talk(&person);
+    talk(&dog);
+    //compile time error since Tree doesn't impl Talk
+    //talk(&tree);
+}
+</code></pre>
+        </section>
+
+
+        <section>
+            <pre ng-non-bindable><code class="rust">trait Talk {
+    fn talk (&self) {
+        println!("strange noises");
+    }
+}
+
+impl Talk for Cat {}
+</code></pre>
+        <p>Traits can have default implementations</code></p>
+        </section>
+
+
+        <section>
+            <pre ng-non-bindable><code class="rust">impl Talk for i32 {
+    fn talk (&self) { println!("shifting bits around"); }
+}
+
+fn talk(talkable: &Talk) {
+    talkable.talk();
+}
+
+fn main() {
+    talk(&3);
+}</code></pre>
+        <p>Traits can be written for foreign types!</code></p>
+        </section>
+
+
+        <section data-background="img/chris-rock-huh-face.gif">
+          <p style="color: #fff; font-weight: bold; font-size: 2em; margin-top: 6em;">Isn't that wild west crazy?!</p>
+        </section>
+
+
+        <section>
+            <h2>Trait limitations</h2>
+            <ul>
+              <li class="fragment">Either the trait or the type you're writing the <code class="rust">impl</code> for must be inside your crate</li>
+              <li class="fragment">Traits must be brought into scope with <code>use</code></li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Generics</h2>
+        </section>
+
+
+        <section>
+            <pre ng-non-bindable><code>struct Person;
+struct Car;
+struct SmartPersonStorage;
+
+impl SmartPersonStorage {
+    fn add (&self, item: Person) { /*code*/ }
+    fn get (&self, id: i32) -> Person { /*code*/ }
+}
+</code></pre>
+    <p class="fragment">What if we need a <code>SmartCarStorage</code>, too?</p>
+        </section>
+
+        <section>
+            <pre ng-non-bindable><code class="code--big">struct Person;
+struct Car;
+struct SmartPersonStorage;
+struct SmartCarStorage;
+
+impl SmartPersonStorage {
+    fn add (&self, item: Person) { /*code*/ }
+    fn get (&self, id: i32) -> Person { /*code*/ }
+}
+impl SmartCarStorage {
+    fn add (&self, item: Car) { /*code*/ }
+    fn get (&self, id: i32) -> Car { /*code*/ }
+}
+</code></pre>
+    <p>Give up DRY</p>
+    <p class="fragment">:( sad face</p>
+        </section>
+
+
+        <section>
+            <pre ng-non-bindable><code>struct Person;
+struct Car;
+struct SmartStorage;
+
+impl SmartStorage {
+    fn add (&self, item: &Any) { /*code*/ }
+    fn get (&self, id: i32) -> &Any { /*code*/ }
+}
+</code></pre>
+    <p>Give up type safety</p>
+    <p class="fragment">:( sad face</p>
+        </section>
+
+        <section>
+            <pre ng-non-bindable><code>struct Person;
+struct Car;
+struct SmartStorage;
+
+impl SmartStorage&lt;T> {
+    fn add (&self, item: T) { /*code*/ }
+    fn get (&self, id: i32) -> T { /*code*/ }
+}
+</code></pre>
+    <p>Give up nothing</p>
+    <p class="fragment">:) happy face</p>
+        </section>
+
+        <section>
+            <pre ng-non-bindable><code>struct Person;
+struct Car;
+struct SmartStorage;
+
+impl SmartStorage&lt;T: HasId> {
+    fn add (&self, item: T) { /*code*/ }
+    fn get (&self, id: i32) -> T { /*code*/ }
+}
+</code></pre>
+    <p>Can use trait bounds</p>
+    <p>&nbsp;<!-- poor mans bouncing slide prevention--></p>
+
+        </section>
+
+        <section>
+            <h2>Traits + Generics = <3</h2>
+            <p class="fragment">
+                Let's refactor some earlier code!
+            </p>
+        </section>
+
+
+        <section>
+            <pre ng-non-bindable><code>fn talk(talkable: &Talk) {
+    talkable.talk();
+}
+fn main() {
+    let person = Human;
+    let dog = Dog;
+    talk(&person);
+    talk(&dog);
+}</code></pre>
+
+<p>
+    Can pass any reference to anything that implements the <code>Talk</code> trait
+</p>
+        </section>
+
+        <section>
+            <pre ng-non-bindable><code class="rust">struct Human;
+struct Dog;
+
+impl Talk for Human {
+    fn talk (&self) { println!("blabla"); }
+}
+
+impl Talk for Dog {
+    fn talk (&self)  { println!("bark bark"); }
+}
+</code></pre>
+
+<p>
+  Each struct has it's own <code>talk</code> implementation
+</p>
+        </section>
+
+
+<section>
+<pre ng-non-bindable><code>fn talk(talkable: &Talk) {
+    talkable.talk();
+}
+fn main() {
+    let person = Human;
+    let dog = Dog;
+    talk(&person);
+    talk(&dog);
+}</code></pre>
+
+
+<p>&nbsp;<!-- poor mans bouncing slide prevention--></p>
+
+</section>
+
+<section>
+
+<pre ng-non-bindable=""><static-code class="hljs rust opaque"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">talk</span></span>(talkable: &amp;Talk) {
+    talkable.<span class="non-opaque">talk()</span>;
+}
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+    <span class="hljs-keyword">let</span> person = Human;
+    <span class="hljs-keyword">let</span> dog = Dog;
+    talk(&amp;person);
+    talk(&amp;dog);
+}</static-code></pre>
+
+
+<p>
+    Which implementation of <code>talk()</code> to call here?
+</p>
+</section>
+
+<section>
+  <p style="font-size:1.5em;">It has to be looked up in a vtable at runtime</p>
+</section>
+
+<section data-background="img/surprise.gif">
+  <p style="color: #fff; font-weight: bold; font-size: 2em; margin-top: 6em;">You're talking about dynamic dispatch, right?!</p>
+</section>
+
+<section>
+  <h2>Let's refactor that</h2>
+</section>
+
+<section>
+    <pre ng-non-bindable><code>fn talk(talkable: &Talk) {
+    talkable.talk();
+}
+
+fn main() {
+    let person = Human;
+    let dog = Dog;
+    talk(&person);
+    talk(&dog);
+}</code></pre>
+<p>&nbsp;<!-- poor mans bouncing slide prevention--></p>
+
+</section>
+
+
+        <section>
+            <pre ng-non-bindable><code>fn talk&lt;T: Talk>(talkable: T) {
+    talkable.talk();
+}
+
+fn main() {
+    let person = Person;
+    let dog = Dog;
+    talk(person);
+    talk(dog);
+}
+</code></pre>
+<p>&nbsp;<!-- poor mans bouncing slide prevention--></p>
+
+        </section>
+
+<section>
+  <pre ng-non-bindable>
+<static-code class="hljs rust opaque"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">talk</span></span><span class="non-opaque">&lt;T: Talk&gt;(talkable: T)</span> {
+    talkable.talk();
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+    <span class="hljs-keyword">let</span> person = Person;
+    <span class="hljs-keyword">let</span> dog = Dog;
+    talk(<span class="non-opaque">person</span>);
+    talk(<span class="non-opaque">dog</span>);
+}
+</static-code></pre>
+<p>
+    <code>talk</code> is now generic with a <code>Talk</code> trait bound
+  </p>
+</section>
+
+
+        <section>
+            <pre ng-non-bindable><code class="code--big">fn talk_person(talkable: Person) {
+    talkable.talk();
+}
+
+fn talk_dog(talkable: Dog) {
+    talkable.talk();
+}
+fn main() {
+    let person = Person;
+    let dog = Dog;
+    talk_person(person);
+    talk_dog(dog);
+}
+</code></pre>
+<p>
+    The compiler generates specialized code
+</p>
+        </section>
+
+        <section data-background="img/surprise.gif">
+          <p style="color: #fff; font-weight: bold; font-size: 2em; margin-top: 6em;">That's why they call it static dispatch!</p>
+        </section>
+
+
+        <section data-background="img/mind-blown.gif">
+          <p style="color: #fff; font-weight: bold; font-size: 2em; margin-top: 6em;">Zero-cost abstractions</p>
+        </section>
+
+        <!-- <section>
+            <h2>enums</h2>
+            <p>
+                (called the "sum type" of algebraic data types)
+            </p>
+        </section>
+
+        <section>
+            <pre ng-non-bindable><code class="rust">enum Error {
+    Critical,
+    NonCritical
+}</code></pre>
+<p class="fragment">
+    Error can either be <code class="rust">Critical</code> or <code class="rust">NonCritical</code> at any one time
+</p>
+        </section>
+
+        <section>
+            <pre ng-non-bindable><code class="rust">fn log_error(error:Error) {
+    match error {
+        Error::Critical => println!("Critical error happened"),
+        Error::NonCritical => println!("Relax, it's probably fine ;)")
+    }
+}
+
+fn main() {
+    log_error(Error::Critical);
+    log_error(Error::NonCritical);
+}
+</code></pre>
+
+        </section>
+
+        <section>
+            <pre ng-non-bindable><code class="rust">enum HttpError {
+    WithCode(i32),
+    WithMessage(&'static str),
+    WithCodeAndMessage(i32, &'static str)
+}</code></pre>
+<p class="fragment">
+    Variants may contain data of any other (mixed) types
+</p>
+        </section>
+
+        <section>
+            <pre ng-non-bindable><code class="rust">fn log_http_error(error:HttpError) {
+    match error {
+        HttpError::WithCode(code) => println!("error with id {} occured", code),
+        HttpError::WithMessage(msg) => println!("error with message {} occured", msg),
+        HttpError::WithCodeAndMessage(code, msg) => println!("error with code {} and message {} occured", code, msg)
+    }
+}
+
+fn main() {
+    log_http_error(HttpError::WithCode(404));
+    log_http_error(HttpError::WithMessage("Service unavailable"));
+}</code></pre>
+<p class="fragment">
+    which we have access to via pattern matching
+</p>
+        </section>
+
+
+        <section>
+            <pre ng-non-bindable><code class="rust">enum Result&lt;T, E> {
+    Ok(T),
+    Err(E),
+}</code></pre>
+<p class="fragment">
+    Types can be generic
+</p>
+        </section>
+
+        <section>
+            <pre ng-non-bindable><code class="rust">match File::open("foo.txt") {
+    Ok(file) => {/*do something with file */},
+    Err(error) => {/* handle error (io::Error)*/}
+}</code></pre>
+
+            <pre ng-non-bindable><code class="rust">match json::decode(json_str)) {
+    Ok(model) => {/*do something with model*/},
+    Err(error) => {/*handle error (json::DecoderError)*/}
+}</code></pre>
+<p class="fragment">
+    In fact the std library uses generic enums a lot
+</p>
+        </section>
+
+        <section>
+          <pre ng-non-bindable><code class="rust">impl&lt;T, E&gt; Result&lt;T, E&gt; {
+    fn is_err(&self) -> bool {
+        !self.is_ok()
+    }
+}</code></pre>
+
+<p class="fragment">
+    Enums can implement methods
+</p>
+        </section>
+
+        <section>
+            <pre ng-non-bindable><code class="rust">impl &lt;T: Clone, E: Clone&gt; Clone for Result&lt;T, E&gt;  {
+  fn clone(&self) -> Result&lt;T, E&gt; {
+    match &*self {
+      &Result::Ok(ref val) => Result::Ok(val.clone()),
+      &Result::Err(ref val) => Result::Err(val.clone()),
+    }
+  }
+}</code></pre>
+
+<p class="fragment">
+    Enums can implement traits
+</p>
+        </section>
+
+        <section>
+            <h2>Macros</h2>
+        </section>
+
+
+        <section>
+            <pre ng-non-bindable><code class="rust">macro_rules! foo {
+    (x => $e:expr) => (println!("mode X: {}", $e));
+    (y => $e:expr) => (println!("mode Y: {}", $e));
+}
+
+fn main() {
+    foo!(y => 3);
+}</code></pre>
+
+<p class="fragment">
+    Macros allow us to abstract at a syntactic level
+</p>
+        </section> -->
+
+        <section class="sub-section-slide" data-background-transition="zoom" data-background="#80B4C4">
+          <h2>Nickel.rs</h2>
+        </section>
+
+        <section class="image-slide">
+          <img src="img/nickel_history.png" style="margin-top: 2em; width: 600px;">
+        </section>
+
+        <section>
+            <h2>Nickel in a nutshell</h2>
+            <ul>
+              <li class="fragment">Thin layer on top of pure http</li>
+              <li class="fragment">Inspired by express.js</li>
+              <li class="fragment">Extensible via custom middleware</li>
+            </ul>
+        </section>
+
+
+        <section>
+            <h2>hello world example</h2>
+            <pre ng-non-bindable><code class="rust">#[macro_use]
+extern crate nickel;
+
+use nickel::Nickel;
+use nickel::router::http_router::HttpRouter;
+
+fn main() {
+    let mut server = Nickel::new();
+    server.get("/hello", middleware!("hello world"));
+    server.listen("127.0.0.1:6767");
+}</code></pre>
+        </section>
+
+
+<section><pre><static-code class="rust hljs opaque"><span class="hljs-preprocessor non-opaque">#[macro_use]</span>
+<span class="hljs-keyword">extern</span> <span class="hljs-keyword">crate</span> nickel;
+
+<span class="hljs-keyword">use</span> nickel::Nickel;
+<span class="hljs-keyword">use</span> nickel::router::http_router::HttpRouter;
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> server = Nickel::new();
+    server.get(<span class="hljs-string">"/hello"</span>, middleware!(<span class="hljs-string">"hello world"</span>));
+    server.listen(<span class="hljs-string">"127.0.0.1:6767"</span>);
+}</static-code></pre>
+  <p>
+      Tells the compiler to include macros from <code>nickel</code> crate
+  </p>
+</section>
+
+<section><pre><static-code class="rust hljs opaque"><span class="hljs-preprocessor">#[macro_use]</span>
+<span class="non-opaque"><span class="hljs-keyword non-opaque">extern</span> <span class="hljs-keyword non-opaque">crate</span> nickel;</span>
+
+<span class="hljs-keyword">use</span> nickel::Nickel;
+<span class="hljs-keyword">use</span> nickel::router::http_router::HttpRouter;
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> server = Nickel::new();
+    server.get(<span class="hljs-string">"/hello"</span>, middleware!(<span class="hljs-string">"hello world"</span>));
+    server.listen(<span class="hljs-string">"127.0.0.1:6767"</span>);
+}</static-code></pre>
+  <p>
+      Tells the compiler to include the <code>nickel</code> crate
+  </p>
+</section>
+
+<section><pre><static-code class="rust hljs opaque"><span class="hljs-preprocessor">#[macro_use]</span>
+<span><span class="hljs-keyword">extern</span> <span class="hljs-keyword">crate</span> nickel;</span>
+
+<span class="hljs-keyword non-opaque">use</span><span class="non-opaque"> nickel::Nickel;</span>
+<span class="hljs-keyword">use</span> nickel::router::http_router::HttpRouter;
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> server = Nickel::new();
+    server.get(<span class="hljs-string">"/hello"</span>, middleware!(<span class="hljs-string">"hello world"</span>));
+    server.listen(<span class="hljs-string">"127.0.0.1:6767"</span>);
+}</static-code></pre>
+<p>
+    Imports nickel's facade
+</p>
+</section>
+
+
+<section><pre><static-code class="rust hljs opaque"><span class="hljs-preprocessor">#[macro_use]</span>
+<span><span class="hljs-keyword">extern</span> <span class="hljs-keyword">crate</span> nickel;</span>
+
+<span class="hljs-keyword">use</span><span> nickel::Nickel;</span>
+<span class="hljs-keyword non-opaque">use</span><span class="non-opaque"> nickel::router::http_router::HttpRouter;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> server = Nickel::new();
+    server.get(<span class="hljs-string">"/hello"</span>, middleware!(<span class="hljs-string">"hello world"</span>));
+    server.listen(<span class="hljs-string">"127.0.0.1:6767"</span>);
+}</static-code></pre>
+<p>
+    Brings <code>HttpRouter</code> trait into scope
+</p>
+</section>
+
+<section><pre><static-code class="rust hljs opaque"><span class="hljs-preprocessor">#[macro_use]</span>
+<span><span class="hljs-keyword">extern</span> <span class="hljs-keyword">crate</span> nickel;</span>
+
+<span class="hljs-keyword">use</span><span> nickel::Nickel;</span>
+<span class="hljs-keyword">use</span><span> nickel::router::http_router::HttpRouter;</span>
+
+<span class="hljs-function non-opaque"><span class="hljs-keyword non-opaque">fn</span> <span class="hljs-title non-opaque">main</span></span><span class="non-opaque">() {</span>
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> server = Nickel::new();
+    server.get(<span class="hljs-string">"/hello"</span>, middleware!(<span class="hljs-string">"hello world"</span>));
+    server.listen(<span class="hljs-string">"127.0.0.1:6767"</span>);
+<span class="non-opaque">}</span></static-code></pre>
+<p>
+    The rust program entry function
+</p>
+</section>
+
+<section><pre><static-code class="rust hljs opaque"><span class="hljs-preprocessor">#[macro_use]</span>
+<span><span class="hljs-keyword">extern</span> <span class="hljs-keyword">crate</span> nickel;</span>
+
+<span class="hljs-keyword">use</span><span> nickel::Nickel;</span>
+<span class="hljs-keyword">use</span><span> nickel::router::http_router::HttpRouter;</span>
+
+<span class="hljs-function "><span class="hljs-keyword ">fn</span> <span class="hljs-title ">main</span></span><span>() {</span>
+    <span class="hljs-keyword non-opaque">let</span> <span class="hljs-keyword non-opaque">mut</span><span class="non-opaque"> server = Nickel::new();</span>
+    server.get(<span class="hljs-string">"/hello"</span>, middleware!(<span class="hljs-string">"hello world"</span>));
+    server.listen(<span class="hljs-string">"127.0.0.1:6767"</span>);
+<span>}</span></static-code></pre>
+<p>
+    Creates nickel's facade object
+</p>
+</section>
+
+<section><pre><static-code class="rust hljs opaque"><span class="hljs-preprocessor">#[macro_use]</span>
+<span><span class="hljs-keyword">extern</span> <span class="hljs-keyword">crate</span> nickel;</span>
+
+<span class="hljs-keyword">use</span><span> nickel::Nickel;</span>
+<span class="hljs-keyword">use</span><span> nickel::router::http_router::HttpRouter;</span>
+
+<span class="hljs-function "><span class="hljs-keyword ">fn</span> <span class="hljs-title ">main</span></span><span>() {</span>
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword non-opaque">mut</span><span> server = Nickel::new();</span>
+    server.get(<span class="hljs-string">"/hello"</span>, middleware!(<span class="hljs-string">"hello world"</span>));
+    server.listen(<span class="hljs-string">"127.0.0.1:6767"</span>);
+<span>}</span></static-code></pre>
+<p>
+    Mutability must be explicit
+</p>
+</section>
+
+<section><pre><static-code class="rust hljs opaque"><span class="hljs-preprocessor">#[macro_use]</span>
+<span><span class="hljs-keyword">extern</span> <span class="hljs-keyword">crate</span> nickel;</span>
+
+<span class="hljs-keyword">use</span><span> nickel::Nickel;</span>
+<span class="hljs-keyword">use</span><span> nickel::router::http_router::HttpRouter;</span>
+
+<span class="hljs-function "><span class="hljs-keyword ">fn</span> <span class="hljs-title ">main</span></span><span>() {</span>
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span><span> server = Nickel::new();</span>
+    <span class="non-opaque">server.get(<span class="hljs-string non-opaque">"/hello"</span>, middleware!(<span class="hljs-string non-opaque">"hello world"</span>));</span>
+    server.listen(<span class="hljs-string">"127.0.0.1:6767"</span>);
+<span>}</span></static-code></pre>
+<p>
+    Respond with <code>hello world</code> on <code>127.0.0.1:6767/hello</code>
+</p>
+</section>
+
+<section><pre><static-code class="rust hljs opaque"><span class="hljs-preprocessor">#[macro_use]</span>
+<span><span class="hljs-keyword">extern</span> <span class="hljs-keyword">crate</span> nickel;</span>
+
+<span class="hljs-keyword">use</span><span> nickel::Nickel;</span>
+<span class="hljs-keyword">use</span><span> nickel::router::http_router::HttpRouter;</span>
+
+<span class="hljs-function "><span class="hljs-keyword ">fn</span> <span class="hljs-title ">main</span></span><span>() {</span>
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span><span> server = Nickel::new();</span>
+    server.get(<span class="hljs-string">"/hello"</span>, middleware!(<span class="hljs-string">"hello world"</span>));
+    <span class="non-opaque">server.listen(<span class="hljs-string non-opaque">"127.0.0.1:6767"</span>);</span>
+<span>}</span></static-code></pre>
+<p>
+    Start listening
+</p>
+</section>
+
+        <section>
+          <h2>The <code>middleware!</code> macro is hot sauce!</h2>
+        </section>
+
+        <section>
+            <pre ng-non-bindable><code class="rust">middleware!("hello world")</code></pre>
+            <p>
+                handler without body
+            </p>
+        </section>
+
+        <section>
+            <pre ng-non-bindable><code class="rust">middleware!({
+    let first_name = "Pascal";
+    let last_name = "Precht";
+    format!("{} {}", first_name, last_name)
+})</code></pre>
+            <p>
+                handler with body
+            </p>
+        </section>
+
+        <section>
+            <pre ng-non-bindable><code class="rust">middleware! { |req|
+    format!("Hello: {}", req.param("username"))
+}</code></pre>
+            <p>
+                Accessing <code>request</code> params
+            </p>
+        </section>
+
+
+        <section>
+            <pre ng-non-bindable><code class="rust">middleware! { |req, mut res|
+    res.content_type(MediaType::Json);
+    r#"{"foo":"bar"}"#
+}</code></pre>
+            <p>
+                Setting the content type
+            </p>
+        </section>
+
+        <section>
+            <h2>The <code>middleware!</code> macro</h2>
+            <ul>
+              <li class="fragment">Improves ergonomics where the language lacks</li>
+              <li class="fragment">Improves stability on a syntactic level</li>
+            </ul>
+        </section>
+
+
+        <section>
+            <h2>HTTP verbs</h2>
+        </section>
+
+<section><pre><static-code class="rust hljs opaque"><span class="hljs-preprocessor">#[macro_use]</span>
+<span><span class="hljs-keyword">extern</span> <span class="hljs-keyword">crate</span> nickel;</span>
+
+<span class="hljs-keyword">use</span><span> nickel::Nickel;</span>
+<span class="hljs-keyword">use</span><span> nickel::router::http_router::HttpRouter;</span>
+
+<span class="hljs-function "><span class="hljs-keyword ">fn</span> <span class="hljs-title ">main</span></span><span>() {</span>
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span><span> server = Nickel::new();</span>
+    server.<span class="non-opaque">get</span>(<span class="hljs-string">"/hello"</span>, middleware!(<span class="hljs-string">"hello world"</span>));
+    <span>server.listen(<span class="hljs-string">"127.0.0.1:6767"</span>);</span>
+<span>}</span></static-code></pre>
+</section>
+
+<section><pre><static-code class="rust hljs opaque"><span class="hljs-preprocessor">#[macro_use]</span>
+<span><span class="hljs-keyword">extern</span> <span class="hljs-keyword">crate</span> nickel;</span>
+
+<span class="hljs-keyword">use</span><span> nickel::Nickel;</span>
+<span class="hljs-keyword">use</span><span> nickel::router::http_router::HttpRouter;</span>
+
+<span class="hljs-function "><span class="hljs-keyword ">fn</span> <span class="hljs-title ">main</span></span><span>() {</span>
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span><span> server = Nickel::new();</span>
+    server.<span class="non-opaque">post</span>(<span class="hljs-string">"/hello"</span>, middleware!(<span class="hljs-string">"hello world"</span>));
+    <span>server.listen(<span class="hljs-string">"127.0.0.1:6767"</span>);</span>
+<span>}</span></static-code></pre>
+</section>
+
+<section><pre><static-code class="rust hljs opaque"><span class="hljs-preprocessor">#[macro_use]</span>
+<span><span class="hljs-keyword">extern</span> <span class="hljs-keyword">crate</span> nickel;</span>
+
+<span class="hljs-keyword">use</span><span> nickel::Nickel;</span>
+<span class="hljs-keyword">use</span><span> nickel::router::http_router::HttpRouter;</span>
+
+<span class="hljs-function "><span class="hljs-keyword ">fn</span> <span class="hljs-title ">main</span></span><span>() {</span>
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span><span> server = Nickel::new();</span>
+    server.<span class="non-opaque">put</span>(<span class="hljs-string">"/hello"</span>, middleware!(<span class="hljs-string">"hello world"</span>));
+    <span>server.listen(<span class="hljs-string">"127.0.0.1:6767"</span>);</span>
+<span>}</span></static-code></pre>
+</section>
+
+<section><pre><static-code class="rust hljs opaque"><span class="hljs-preprocessor">#[macro_use]</span>
+<span><span class="hljs-keyword">extern</span> <span class="hljs-keyword">crate</span> nickel;</span>
+
+<span class="hljs-keyword">use</span><span> nickel::Nickel;</span>
+<span class="hljs-keyword">use</span><span> nickel::router::http_router::HttpRouter;</span>
+
+<span class="hljs-function "><span class="hljs-keyword ">fn</span> <span class="hljs-title ">main</span></span><span>() {</span>
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span><span> server = Nickel::new();</span>
+    server.<span class="non-opaque">delete</span>(<span class="hljs-string">"/hello"</span>, middleware!(<span class="hljs-string">"hello world"</span>));
+    <span>server.listen(<span class="hljs-string">"127.0.0.1:6767"</span>);</span>
+<span>}</span></static-code></pre>
+</section>
+
+<section><pre><static-code class="rust hljs opaque"><span class="hljs-preprocessor">#[macro_use]</span>
+<span><span class="hljs-keyword">extern</span> <span class="hljs-keyword">crate</span> nickel;</span>
+
+<span class="hljs-keyword">use</span><span> nickel::Nickel;</span>
+<span class="hljs-keyword">use</span><span> nickel::router::http_router::HttpRouter;</span>
+
+<span class="hljs-function "><span class="hljs-keyword ">fn</span> <span class="hljs-title ">main</span></span><span>() {</span>
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span><span> server = Nickel::new();</span>
+    server.<span class="non-opaque">option</span>(<span class="hljs-string">"/hello"</span>, middleware!(<span class="hljs-string">"hello world"</span>));
+    <span>server.listen(<span class="hljs-string">"127.0.0.1:6767"</span>);</span>
+<span>}</span></static-code></pre>
+</section>
+
+        <section>
+            <h2>Flexible Routing</h2>
+        </section>
+
+<section><pre><static-code class="rust hljs opaque"><span class="hljs-preprocessor">#[macro_use]</span>
+<span><span class="hljs-keyword">extern</span> <span class="hljs-keyword">crate</span> nickel;</span>
+
+<span class="hljs-keyword">use</span><span> nickel::Nickel;</span>
+<span class="hljs-keyword">use</span><span> nickel::router::http_router::HttpRouter;</span>
+
+<span class="hljs-function "><span class="hljs-keyword ">fn</span> <span class="hljs-title ">main</span></span><span>() {</span>
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span><span> server = Nickel::new();</span>
+    server.<span>get</span>(<span class="hljs-string non-opaque">"/bar"</span>, middleware!(<span class="hljs-string">"hello world"</span>));
+    <span>server.listen(<span class="hljs-string">"127.0.0.1:6767"</span>);</span>
+<span>}</span></static-code></pre>
+<p>
+    matches <code>/bar</code>
+</p>
+</section>
+
+<section><pre><static-code class="rust hljs opaque"><span class="hljs-preprocessor">#[macro_use]</span>
+<span><span class="hljs-keyword">extern</span> <span class="hljs-keyword">crate</span> nickel;</span>
+
+<span class="hljs-keyword">use</span><span> nickel::Nickel;</span>
+<span class="hljs-keyword">use</span><span> nickel::router::http_router::HttpRouter;</span>
+
+<span class="hljs-function "><span class="hljs-keyword ">fn</span> <span class="hljs-title ">main</span></span><span>() {</span>
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span><span> server = Nickel::new();</span>
+    server.<span>get</span>(<span class="hljs-string non-opaque">"/a/*/d"</span>, middleware!(<span class="hljs-string">"hello world"</span>));
+    <span>server.listen(<span class="hljs-string">"127.0.0.1:6767"</span>);</span>
+<span>}</span></static-code></pre>
+<p>
+    matches <code>/a/b/d</code>
+</p>
+<p>
+    BUT NOT <code>/a/b/c/d</code>
+</p>
+</section>
+
+
+<section><pre><static-code class="rust hljs opaque"><span class="hljs-preprocessor">#[macro_use]</span>
+<span><span class="hljs-keyword">extern</span> <span class="hljs-keyword">crate</span> nickel;</span>
+
+<span class="hljs-keyword">use</span><span> nickel::Nickel;</span>
+<span class="hljs-keyword">use</span><span> nickel::router::http_router::HttpRouter;</span>
+
+<span class="hljs-function "><span class="hljs-keyword ">fn</span> <span class="hljs-title ">main</span></span><span>() {</span>
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span><span> server = Nickel::new();</span>
+    server.<span>get</span>(<span class="hljs-string non-opaque">"/a/**/d"</span>, middleware!(<span class="hljs-string">"hello world"</span>));
+    <span>server.listen(<span class="hljs-string">"127.0.0.1:6767"</span>);</span>
+<span>}</span></static-code></pre>
+<p>
+    matches <code>/a/b/d</code>
+</p>
+<p>
+    AND ALSO <code>/a/b/c/d</code>
+</p>
+</section>
+
+        <section>
+            <h2>Middleware</h2>
+        </section>
+
+<section><pre><static-code class="rust hljs opaque"><span class="hljs-preprocessor">#[macro_use]</span>
+<span><span class="hljs-keyword">extern</span> <span class="hljs-keyword">crate</span> nickel;</span>
+
+<span class="hljs-keyword">use</span><span> nickel::Nickel;</span>
+<span class="hljs-keyword">use</span><span> nickel::router::http_router::HttpRouter;</span>
+
+<span class="hljs-function "><span class="hljs-keyword ">fn</span> <span class="hljs-title ">main</span></span><span>() {</span>
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span><span> server = Nickel::new();</span>
+    <span class="non-opaque">server.utilize(StaticFilesHandler::new(<span class="hljs-string non-opaque">"examples/assets/"</span>));</span>
+    server.<span>get</span>(<span class="hljs-string">"/hello"</span>, middleware!(<span class="hljs-string">"hello world"</span>));
+    <span>server.listen(<span class="hljs-string">"127.0.0.1:6767"</span>);</span>
+<span>}</span></static-code></pre>
+<p>
+    Serves files from <code>example/assets</code>
+</p>
+</section>
+
+        <section>
+            <h2>What else</h2>
+            <ul>
+              <li class="fragment">Custom Middleware</li>
+              <li class="fragment">JSON Support</li>
+              <li class="fragment">Mounting</li>
+              <li class="fragment">Error Handling</li>
+              <li class="fragment">Encrypted Cookies</li>
+              <li class="fragment">Session Support</li>
+            </ul>
+        </section>
+
+        <section>
+            <h1>Thank you</h1>
+        </section>
+
+      </div>
+
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        transition: 'none', // none/fade/slide/convex/concave/zoom
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'plugin/zoom-js/zoom.js', async: true },
+          { src: 'plugin/notes/notes.js', async: true }
+        ]
+      });
+
+    </script>
+
+  </body>
+</html>
