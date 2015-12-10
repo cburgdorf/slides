@@ -924,7 +924,7 @@ fn main() {
     Critical,
     NonCritical
 }</code></pre>
-<p class="fragment">
+<p>
     Error can either be <code class="rust">Critical</code> or <code class="rust">NonCritical</code> at any one time
 </p>
         </section>
@@ -942,7 +942,9 @@ fn main() {
     log_error(Error::NonCritical);
 }
 </code></pre>
-
+<p>
+    Can pattern match against variants
+</p>
         </section>
 
         <section>
@@ -951,7 +953,7 @@ fn main() {
     Message(String),
     Multi(i32, String)
 }</code></pre>
-<p class="fragment">
+<p>
     Variants may contain data of any other (mixed) types
 </p>
         </section>
@@ -969,8 +971,8 @@ fn main() {
   log_err(Err::Id(404));
   log_err(Err::Message("Service unavailable".to_owned()));
 }</code></pre>
-<p class="fragment">
-    which we have access to via pattern matching
+<p>
+    Use pattern matching to get to the data
 </p>
         </section>
 
@@ -980,7 +982,7 @@ fn main() {
     Ok(T),
     Err(E),
 }</code></pre>
-<p class="fragment">
+<p>
     Types can be generic
 </p>
         </section>
@@ -995,7 +997,7 @@ fn main() {
     Ok(model) => {/*do something with model*/},
     Err(error) => {/*handle error (json::DecoderError)*/}
 }</code></pre>
-<p class="fragment">
+<p>
     In fact the std library uses generic enums a lot
 </p>
         </section>
@@ -1007,7 +1009,7 @@ fn main() {
     }
 }</code></pre>
 
-<p class="fragment">
+<p>
     Enums can implement methods
 </p>
         </section>
@@ -1022,7 +1024,7 @@ fn main() {
   }
 }</code></pre>
 
-<p class="fragment">
+<p>
     Enums can implement traits
 </p>
         </section>
